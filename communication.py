@@ -20,18 +20,26 @@ class FileServer():
 	(connection, addr) = self.sock.accept()
 	print "Client connected", connection, addr
 	
-	handler = Handler(connection)
+	handler = FileHandler(connection)
 	thread.start_new_thread(handler.main, ())
+    except:
+      print "some kind of weird error"
 	
-	
-class FileHandler:
+class FileHandler():
   def __init__(self, conn):
+    print "mordi"
     self.conn = conn
-    
     self.cfile = conn.makefile('rw', 0)
     
+    
   def main(self):
+    print "got some shit"
     line = self.cfile.readline().strip()
     print "--> REQUEST IS:", line
     
-    
+
+if __name__ == "__main__":
+  print "Starting Server test"
+  
+  server = FileServer('localhost', 8080)
+  server.main()

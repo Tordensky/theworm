@@ -68,6 +68,7 @@ if __name__ == "__main__":
     
     while RUNNING:
         # TODO: Start implementing your worm here
+        
         print 'running...'
         time.sleep(1)
     time.sleep(0.1); # Give display thread some time to terminate

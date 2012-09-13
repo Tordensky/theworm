@@ -9,9 +9,11 @@ class CellGate():
     pass
   
   def startup(self):
+    
     """
     Start up wormgate
     """
+    
     pass
   
   def listenForIncomingCells(self):
@@ -26,9 +28,14 @@ class CellGate():
     """
     Startup worm segment on host
     """
-    pass
+    print "Staring worm segment"
+    
+    cmd = "python cells.py"
   
-    # TODO startup new cell segment
+    res, text = commands.getstatusoutput( cmd )
+    
+    print "Returned status : %d" % res
+    print "Returned text \n%s" % text
     
   def die(self):
     """
@@ -43,9 +50,3 @@ class CellGate():
 if __name__ == "__main__":
   print "Staring wormgate"
   
-  cmd = "python cells.py"
-  
-  res, text = commands.getstatusoutput( cmd )
-  
-  print "Returned status : %d" % res
-  print "Returned text \n%s" % text
