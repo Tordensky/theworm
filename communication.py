@@ -26,17 +26,22 @@ class FileServer():
                 thread.start_new_thread(handler.main, ())
             except:
         print "some kind of weird error"
-        
-class FileHandler():
-    def __init__(self, conn):
-        self.conn = conn
+
+class FileClient():
+    def __init__(self):
+        pass
     
-        self.cfile = conn.makefile('rw', 0)
+    def sendFile(self, filepath, addr. port):
+        try:
+            data_file = File.open(filepath, "r")        
+        except:
+            print "Error while opening file"
+                
+
+class MessageHandler():
     
-    def main(self):
-        line = self.cfile.readline().strip()
-    
-        print "Request is:", line
+    def fileToMessage():
+        pass
     
     def DataToDict(self):
         self.dataDict = {}
@@ -54,6 +59,20 @@ class FileHandler():
                     break
             else:
                 self.dataDict[line.split()[0]] = line.split()[1]
+
+                
+class FileHandler():
+    def __init__(self, conn):
+        self.conn = conn
+    
+        self.cfile = conn.makefile('rw', 0)
+    
+    def main(self):
+        line = self.cfile.readline().strip()
+    
+        print "Request is:", line
+    
+    
                 
     def saveDataToFile(self, filename, data):
         try:
