@@ -111,9 +111,9 @@ if __name__ == "__main__":
 	#send in more arguments to make the client run, insert nothing to get the server to run
 	if len(sys.argv) == 2:
 		print "Starting Client test"
-		FileClient.sendFile("/tmp/inf3200/worm.zip", 'localhost', 8080)
+		FileClient.sendFile("/tmp/inf3200/worm.zip", 'localhost', 30666)
 		
 	else:
 		print "Starting Server test"
-		server = FileServer('localhost', 8080)
+		server = FileServer('localhost', 30666)
 		server.main()

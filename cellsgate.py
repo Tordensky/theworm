@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import commands
+import communication
 
 port = 30666
 ip = 'localhost';
@@ -13,29 +14,9 @@ class CellGate():
     """
     Start up wormgate
     """
+    self.fileserver = communication.FileServer(ip, port)
+    self.fileserver.main();
     
-    pass
-  
-  def listenForIncomingCells(self):
-    """
-    Listen for incoming segments
-    """
-    pass
-  
-    # TODO Receive new segments
-  
-  def becomeInefected(self):
-    """
-    Startup worm segment on host
-    """
-    print "Staring worm segment"
-    
-    cmd = "python cells.py"
-  
-    res, text = commands.getstatusoutput( cmd )
-    
-    print "Returned status : %d" % res
-    print "Returned text \n%s" % text
     
   def die(self):
     """
@@ -48,5 +29,7 @@ class CellGate():
 
 
 if __name__ == "__main__":
-  print "Staring wormgate"
+	cellgate = CellGate()
+	cellgate.startup()
+
   
