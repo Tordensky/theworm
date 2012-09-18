@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, pygame, random, thread, time, signal, deamonize
+import os, pygame, random, thread, time, signal, deamonize, write, sys
 from pygame.color import THECOLORS
 
 
@@ -8,6 +8,7 @@ SCREEN_HEIGHT = 300
 MAX_SPEED = 20
 RUNNING = True
 
+#bad name for a sprite object
 class MyObject(pygame.sprite.Sprite):  
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -35,6 +36,7 @@ class MyObject(pygame.sprite.Sprite):
         
         self.rect.topleft = (self.x, self.y)
 
+#should change this to display somethign else
 def display_worm_forever():
     x = random.randint(0, 1024 - SCREEN_WIDTH)
     y = random.randint(0, 800 - SCREEN_HEIGHT)
@@ -53,22 +55,27 @@ def display_worm_forever():
         pygame.display.update()
     print 'display thread terminated'
 
-def signal_handler(signal, frame):
-    global RUNNING
-    RUNNING = False	
+
+#class Worm():
+	#def __init__
+
 
 if __name__ == "__main__":
-    # Uncomment to turn worm into a daemon
-    deamonize.daemonize()
-
-    os.putenv('DISPLAY', ':0') # Attach to local display
-    signal.signal(signal.SIGINT, signal_handler) # CTRL+C
-    signal.signal(signal.SIGTERM, signal_handler) # pkill
-    thread.start_new_thread(display_worm_forever, ())
+	
+	path = '/tmp/inf3200/asv009/' + str(os.getpid())
+	os.mkdir(path)
+	
+	#Just to make the input file
+	new_file = open(path + '/input', 'w')
+	new_file.close()
+	
+	deamonize.daemonize(path + '/input', path + '/output', path +'/error')
+	
+	thread.start_new_thread(display_worm_forever, ())
     
-    while RUNNING:
-        # TODO: Start implementing your worm here
+	while RUNNING:
+		# TODO: Start implementing your worm here
         
-        print 'running...'
-        time.sleep(1)
-    time.sleep(0.1); # Give display thread some time to terminate
+		print 'running...'
+		time.sleep(1)
+	time.sleep(0.1); # Give display thread some time to terminate
