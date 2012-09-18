@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, pygame, random, thread, time, signal, deamonize, sys, socket
+import os, pygame, random, thread, time, deamonize, sys, socket, struct
 from pygame.color import THECOLORS
 
 
@@ -7,6 +7,10 @@ SCREEN_WIDTH = 300
 SCREEN_HEIGHT = 300
 MAX_SPEED = 20
 RUNNING = True
+
+MCAST_GRP = '224.1.1.1'
+MCAST_PORT = 30667
+
 
 #bad name for a sprite object
 class MyObject(pygame.sprite.Sprite):  
@@ -59,27 +63,30 @@ def display_worm_forever():
 class UDPcomm():
     '''
     Class for UDP communictation
+    found some implementation http://stackoverflow.com/questions/603852/multicast-in-python
     '''
-    def __init__(self):
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    def __init__(self, PORT):
+		self.reciveSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+		self.reciveSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		self.reciveSock.bind(('', MCAST_PORT))
+		mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
+		self.reciveSock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
     
-    def send(self, data, HOST, PORT):
-        sock.sendto(data + "\n", (HOST, PORT))
-    
-    def receive(self, lenght):
-        return sock.recv(lenght)
-        
+		self.sendSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+		self.sendSock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
+		self.port = PORT
+		
+    def send(self, data):
+        self.senSock.sendto(data, (MCAST_GRP, self.port))
+
     def listen(self, length):
-        try:
-            while True:
-
-                received = sock.recv(length)
-
-                print "Sent:     %s" % data
-                print "Received: %s" % received
+		try:
+			while True:
+				received = self.reciveSock.recv(length)
+				print "Received: %s" % received
                         
-        except:
-                print "some kind of weird error"
+		except:
+				print "some kind of weird error"
         
         
 
@@ -97,8 +104,8 @@ if __name__ == "__main__":
 	
 	thread.start_new_thread(display_worm_forever, ())
 	
-	udpComm = UDPcomm()
-	thread.start_new_thread(udpComm.listen,(1024))
+	udpComm = UDPcomm(MCAST_PORT)
+	thread.start_new_thread(udpComm.listen,(1024,))
     
 	while RUNNING:
 		# TODO: Start implementing your worm here
