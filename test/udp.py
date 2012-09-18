@@ -10,7 +10,7 @@ __date__ ="$Aug 20, 2010 1:22:51 PM$"
 import socket
 import sys
 
-HOST, PORT = "localhost", 9999
+HOST, PORT = "localhost", 30667
 
 HOST = sys.argv[1]
 PORT = int( sys.argv[2] )
@@ -24,7 +24,6 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # Instead, data is directly sent to the recipient via sendto().
 
 sock.sendto(data + "\n", (HOST, PORT))
-received = sock.recv(1024)
+
 
 print "Sent:     %s" % data
-print "Received: %s" % received

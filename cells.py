@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, pygame, random, thread, time, signal, deamonize, sys
+import os, pygame, random, thread, time, signal, deamonize, sys, socket
 from pygame.color import THECOLORS
 
 
@@ -56,22 +56,49 @@ def display_worm_forever():
     print 'display thread terminated'
 
 
-#class Worm():
-	#def __init__
+class UDPcomm():
+    '''
+    Class for UDP communictation
+    '''
+    def __init__(self):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    
+    def send(self, data, HOST, PORT):
+        sock.sendto(data + "\n", (HOST, PORT))
+    
+    def receive(self, lenght):
+        return sock.recv(lenght)
+        
+    def listen(self, length):
+        try:
+            while True:
 
+                received = sock.recv(length)
+
+                print "Sent:     %s" % data
+                print "Received: %s" % received
+                        
+        except:
+                print "some kind of weird error"
+        
+        
 
 if __name__ == "__main__":
 	
 	path = '/tmp/inf3200/asv009/' + str(os.getpid())
+	print path
 	os.mkdir(path)
 	
 	#Just to make the input file
 	new_file = open(path + '/input', 'w')
 	new_file.close()
 	
-	deamonize.daemonize(path + '/input', path + '/output', path +'/error')
+	#deamonize.daemonize(path + '/input', path + '/output', path +'/error')
 	
 	thread.start_new_thread(display_worm_forever, ())
+	
+	udpComm = UDPcomm()
+	thread.start_new_thread(udpComm.listen,(1024))
     
 	while RUNNING:
 		# TODO: Start implementing your worm here
