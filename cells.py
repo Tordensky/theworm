@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, pygame, random, thread, time, signal, deamonize, write, sys
+import os, pygame, random, thread, time, signal, deamonize, sys
 from pygame.color import THECOLORS
 
 
