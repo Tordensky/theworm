@@ -18,6 +18,13 @@ MAX_SEGS = 10
 TARGET_IPS = ['localhost'] 
 WORM_GATE_PORT = 30666
 
+def ChangeRunningToFalse():
+	global RUNNING
+	sys.stdout.flush()
+	pygame.display.quit()
+	RUNNING = False
+	
+	
 #bad name for a sprite object
 class MyObject(pygame.sprite.Sprite):  
     def __init__(self):
@@ -58,11 +65,15 @@ def display_worm_forever():
     clock = pygame.time.Clock()
     myObject = MyObject()        
     while RUNNING:
-        clock.tick(100)
-        myObject.update()    
-        screen.fill((0, 0, 0))
-        pygame.draw.rect(screen, pygame.color.THECOLORS['blue'], myObject.rect)
-        pygame.display.update()
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				ChangeRunningToFalse()
+				break
+		clock.tick(100)
+		myObject.update()    
+		screen.fill((0, 0, 0))
+		pygame.draw.rect(screen, pygame.color.THECOLORS['blue'], myObject.rect)
+		pygame.display.update()
     print 'display thread terminated'
 
 
@@ -87,7 +98,7 @@ class UDPcomm():
 
     def listen(self, length, result, die):
 		try:
-			while True:
+			while RUNNING:
 				received = self.reciveSock.recv(length)
 
 				if received == 'die':
@@ -114,10 +125,10 @@ class WormSegment():
 		"""
 		time.sleep(2)
 		print self.heartbeatreciver
-		self.propagate()
+		#self.propagate()
 		#time.sleep(2)
 		print "i should have propagated" 
-		self.killMySelf()
+		#self.killMySelf()
 	
 	def propagate(self):
 		"""
@@ -151,26 +162,25 @@ class WormSegment():
 		"""
 		Simply stops all the python threads and quits
 		"""
-		sys.stdout.flush()
-		os._exit(1)
+		ChangeRunningToFalse()
 
 	def updateHeartBeatCount(self, count):
 		self.heartbeatreciver += count
+
+
 
 if __name__ == "__main__":
 	
 	#Just to make the input file
 	#new_file = open(path + '/input', 'w')
 	#new_file.close()
-	print os.getcwd()
-	deamonize.daemonize('dev/null', os.getcwd() + '/output', os.getcwd() +'/error')
+	deamonize.daemonize('dev/null', 'output', 'error')
 	
 	thread.start_new_thread(display_worm_forever, ())
 	worm = WormSegment()
 	#worm.listenForIncommingHeartBeats()
 	
 	print "I am running"
-	sys.stdout.flush()
 
 	while RUNNING:
 		# TODO: Start implementing your worm here

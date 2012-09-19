@@ -19,8 +19,8 @@ def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
     # The process is now daemonized, redirect standard file descriptors.
     for f in sys.stdout, sys.stderr: f.flush( )
     si = file(stdin, 'r')
-    so = file(stdout, 'a+')
-    se = file(stderr, 'a+', 0)
+    so = file(__file__[:-12] + stdout, 'a+')
+    se = file(__file__[:-12] + stderr, 'a+', 0)
     os.dup2(si.fileno( ), sys.stdin.fileno( ))
     os.dup2(so.fileno( ), sys.stdout.fileno( ))
     os.dup2(se.fileno( ), sys.stderr.fileno( ))
