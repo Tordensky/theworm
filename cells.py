@@ -88,7 +88,45 @@ class UDPcomm():
 		except:
 				print "some kind of weird error"
         
-        
+
+class WormSegment():
+	def __init__(self):
+		"""
+		The code for the worm segment
+		"""
+		pass
+	
+	def main(self):
+		"""
+		Running the main code for the worm
+		"""
+		pass
+	
+	def propagate(self):
+		"""
+		This fuction is responsible for spreading itself to another node
+		"""
+		pass
+	
+	def sendHeartBeat(self):
+		"""
+		Broadcasts a heartbeat to all the rest of the worms
+		"""
+		pass
+	
+	def estimateNumberOfWormSegment(self):
+		"""
+		Estimates how many worms are in play 
+		"""
+		pass
+	
+	def listenForIncommingHeartBeats(self):
+		"""
+		Listen for all the heartbeats from the rest of the worm segments
+		"""
+		udpComm = UDPcomm(MCAST_PORT)
+		thread.start_new_thread(udpComm.listen,(1024,))
+	
 
 if __name__ == "__main__":
 	
@@ -97,16 +135,13 @@ if __name__ == "__main__":
 	os.mkdir(path)
 	
 	#Just to make the input file
-	new_file = open(path + '/input', 'w')
-	new_file.close()
+	#new_file = open(path + '/input', 'w')
+	#new_file.close()
 	
-	#deamonize.daemonize(path + '/input', path + '/output', path +'/error')
+	#deamonize.daemonize('dev/stdin', path + '/output', path +'/error')
 	
 	thread.start_new_thread(display_worm_forever, ())
 	
-	udpComm = UDPcomm(MCAST_PORT)
-	thread.start_new_thread(udpComm.listen,(1024,))
-    
 	while RUNNING:
 		# TODO: Start implementing your worm here
         
