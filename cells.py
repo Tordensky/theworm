@@ -12,6 +12,12 @@ MCAST_GRP = '224.1.1.1'
 MCAST_PORT = 30667
 
 
+MIN_SEGS = 5
+MAX_SEGS = 10
+
+TARGET_IPS = ['localhost'] 
+WORM_GATE_PORT = 30666
+
 #bad name for a sprite object
 class MyObject(pygame.sprite.Sprite):  
     def __init__(self):
@@ -79,11 +85,17 @@ class UDPcomm():
     def send(self, data):
         self.senSock.sendto(data, (MCAST_GRP, self.port))
 
-    def listen(self, length):
+    def listen(self, length, result, die):
 		try:
 			while True:
 				received = self.reciveSock.recv(length)
-				print "Received: %s" % received
+
+				if received == 'die':
+					die()
+					return
+				
+				result (float(received))
+				
                         
 		except:
 				print "some kind of weird error"
@@ -94,19 +106,23 @@ class WormSegment():
 		"""
 		The code for the worm segment
 		"""
-		pass
-	
+		self.heartbeatreciver = 0.0
+		self.udpComm = UDPcomm(MCAST_PORT)
 	def main(self):
 		"""
 		Running the main code for the worm
 		"""
-		pass
+		print self.heartbeatreciver
+		self.propagate()
+		time.sleep(2)
+		self.killMySelf()
 	
 	def propagate(self):
 		"""
 		This fuction is responsible for spreading itself to another node
 		"""
-		pass
+		target = TARGET_IPS[random.randint(0, len(TARGET_IPS) - 1)]
+		communictation.FileClient().sendFile("theworm.zip",target, WORM_GATE_PORT)
 	
 	def sendHeartBeat(self):
 		"""
@@ -118,33 +134,44 @@ class WormSegment():
 		"""
 		Estimates how many worms are in play 
 		"""
-		pass
+		
+		#Will get a raise condition here, but we don't care about it since it's only a estimate
+		self.heartbeatreciver = 0.0
 	
 	def listenForIncommingHeartBeats(self):
 		"""
 		Listen for all the heartbeats from the rest of the worm segments
 		"""
-		udpComm = UDPcomm(MCAST_PORT)
-		thread.start_new_thread(udpComm.listen,(1024,))
+		
+		thread.start_new_thread(self.udpComm.listen,(1024, self.updateHeartBeatCount, self.killMySelf))
 	
+	def killMySelf(self):
+		"""
+		Simply stops all the python threads and quits
+		"""
+		os._exit(1)
+
+	def updateHeartBeatCount(self, count):
+		self.heartbeatreciver += count
 
 if __name__ == "__main__":
 	
 	path = '/tmp/inf3200/asv009/' + str(os.getpid())
 	print path
-	os.mkdir(path)
+	os.makedirs(path)
 	
 	#Just to make the input file
 	#new_file = open(path + '/input', 'w')
 	#new_file.close()
 	
-	#deamonize.daemonize('dev/stdin', path + '/output', path +'/error')
+	deamonize.daemonize('dev/stdin', path + '/output', path +'/error')
 	
 	thread.start_new_thread(display_worm_forever, ())
-	
+	worm = WormSegment()
+	worm.listenForIncommingHeartBeats()
 	while RUNNING:
 		# TODO: Start implementing your worm here
-        
+		worm.main()
 		print 'running...'
 		time.sleep(1)
 	time.sleep(0.1); # Give display thread some time to terminate
