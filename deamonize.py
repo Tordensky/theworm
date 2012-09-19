@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys, os
 def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
     # Perform first fork.
@@ -13,6 +14,7 @@ def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
     os.chdir("/")
     os.umask(0)
     os.setsid( )
+    
     
     # The process is now daemonized, redirect standard file descriptors.
     for f in sys.stdout, sys.stderr: f.flush( )

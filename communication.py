@@ -3,8 +3,11 @@ import socket
 import thread
 import sys
 import commands
+import os
 
 TYPE_FILE = '1'
+NumberOfWormsStarted = 0
+
 
 class FileServer():
 	def __init__(self, addr, port):
@@ -92,8 +95,11 @@ class FileHandler():
 		print "Got data, unziped it and made it run"
     
 	def runCode(self):
-		res, text = commands.getstatusoutput( "unzip -o /tmp/inf3200/asv009/theworm.zip -d /tmp/inf3200/asv009" )
-		res, text = commands.getstatusoutput("python /tmp/inf3200/asv009/cells.py")
+		global NumberOfWormsStarted
+		os.makedirs("/tmp/inf3200/asv009/" + str(NumberOfWormsStarted))
+		res, text = commands.getstatusoutput( "unzip -o /tmp/inf3200/asv009/theworm.zip -d /tmp/inf3200/asv009/" + str(NumberOfWormsStarted) )
+		res, text = commands.getstatusoutput("python /tmp/inf3200/asv009/" + str(NumberOfWormsStarted) + "/cells.py")
+		NumberOfWormsStarted += 1
 		
 	def saveDataToFile(self, filename, data):
 		try:
@@ -111,7 +117,7 @@ if __name__ == "__main__":
 	#send in more arguments to make the client run, insert nothing to get the server to run
 	if len(sys.argv) == 2:
 		print "Starting Client test"
-		FileClient.sendFile("/tmp/inf3200/worm.zip", 'localhost', 30666)
+		FileClient.sendFile("/tmp/inf3200/asv009/theworm.zip", 'localhost', 30666)
 		
 	else:
 		print "Starting Server test"

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, pygame, random, thread, time, deamonize, sys, socket, struct
+import os, pygame, random, thread, time, deamonize, sys, socket, struct, communication
 from pygame.color import THECOLORS
 
 
@@ -112,9 +112,11 @@ class WormSegment():
 		"""
 		Running the main code for the worm
 		"""
+		time.sleep(2)
 		print self.heartbeatreciver
 		self.propagate()
-		time.sleep(2)
+		#time.sleep(2)
+		print "i should have propagated" 
 		self.killMySelf()
 	
 	def propagate(self):
@@ -122,7 +124,7 @@ class WormSegment():
 		This fuction is responsible for spreading itself to another node
 		"""
 		target = TARGET_IPS[random.randint(0, len(TARGET_IPS) - 1)]
-		communictation.FileClient().sendFile("theworm.zip",target, WORM_GATE_PORT)
+		communication.FileClient().sendFile("/tmp/inf3200/asv009/theworm.zip",target, WORM_GATE_PORT)
 	
 	def sendHeartBeat(self):
 		"""
@@ -149,6 +151,7 @@ class WormSegment():
 		"""
 		Simply stops all the python threads and quits
 		"""
+		sys.stdout.flush()
 		os._exit(1)
 
 	def updateHeartBeatCount(self, count):
@@ -156,19 +159,19 @@ class WormSegment():
 
 if __name__ == "__main__":
 	
-	path = '/tmp/inf3200/asv009/' + str(os.getpid())
-	print path
-	os.makedirs(path)
-	
 	#Just to make the input file
 	#new_file = open(path + '/input', 'w')
 	#new_file.close()
-	
-	deamonize.daemonize('dev/stdin', path + '/output', path +'/error')
+	print os.getcwd()
+	deamonize.daemonize('dev/null', os.getcwd() + '/output', os.getcwd() +'/error')
 	
 	thread.start_new_thread(display_worm_forever, ())
 	worm = WormSegment()
-	worm.listenForIncommingHeartBeats()
+	#worm.listenForIncommingHeartBeats()
+	
+	print "I am running"
+	sys.stdout.flush()
+
 	while RUNNING:
 		# TODO: Start implementing your worm here
 		worm.main()
