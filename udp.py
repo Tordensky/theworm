@@ -21,7 +21,7 @@ class UDPcomm():
     def send(self, data):
         self.senSock.sendto(data, (MCAST_GRP, self.port))
 
-    def listen(self, length, result, die):
+    def listen(self, length, die, result):
 		try:
 			while RUNNING:
 				received = self.reciveSock.recv(length)
@@ -30,7 +30,7 @@ class UDPcomm():
 					die()
 					return
 				
-				result (float(received))
+				result += (float(received))
 				
                         
 		except:

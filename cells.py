@@ -120,7 +120,7 @@ class WormSegment():
 		Listen for all the heartbeats from the rest of the worm segments
 		"""
 		
-		thread.start_new_thread(self.udpComm.listen,(1024, self.updateHeartBeatCount, self.killMySelf))
+		thread.start_new_thread(self.udpComm.listen,(10, self.killMySelf, self.updateHeartBeatCount))
 	
 	def killMySelf(self):
 		"""

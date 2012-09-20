@@ -4,10 +4,12 @@ import thread
 import sys
 import commands
 import os
+from udp import *
+from config import *
 
 TYPE_FILE = '1'
 NumberOfWormsStarted = 0
-
+RECIVING = True
 
 class FileServer():
 	def __init__(self, addr, port):
@@ -95,11 +97,18 @@ class FileHandler():
 		print "Got data, unziped it and made it run"
     
 	def runCode(self):
-		global NumberOfWormsStarted
-		os.makedirs("/tmp/inf3200/asv009/" + str(NumberOfWormsStarted))
-		res, text = commands.getstatusoutput( "unzip -o /tmp/inf3200/asv009/theworm.zip -d /tmp/inf3200/asv009/" + str(NumberOfWormsStarted) )
-		res, text = commands.getstatusoutput("python /tmp/inf3200/asv009/" + str(NumberOfWormsStarted) + "/cells.py")
-		NumberOfWormsStarted += 1
+		global RECIVING
+		if RECIVING == True:
+			global NumberOfWormsStarted
+			os.makedirs("/tmp/inf3200/asv009/" + str(NumberOfWormsStarted))
+			res, text = commands.getstatusoutput( "unzip -o /tmp/inf3200/asv009/theworm.zip -d /tmp/inf3200/asv009/" + str(NumberOfWormsStarted) )
+			res, text = commands.getstatusoutput("python /tmp/inf3200/asv009/" + str(NumberOfWormsStarted) + "/cells.py")
+			NumberOfWormsStarted += 1
+		else:
+			print "Waiting 5 seconds before reciving again"
+			time.sleep(5)
+			RECIVING = True
+			
 		
 	def saveDataToFile(self, filename, data):
 		try:
@@ -111,7 +120,12 @@ class FileHandler():
 			print sys.exc_info()
 		print "Saved file at: " + filename
                     
-    
+def stopReciving():
+	print "Recived die signal"
+	global RECIVING
+	RECIVING = False
+	
+
 #testing the communication, needs the file at the location tough
 if __name__ == "__main__":
 	#send in more arguments to make the client run, insert nothing to get the server to run
@@ -121,5 +135,7 @@ if __name__ == "__main__":
 		
 	else:
 		print "Starting Server test"
+		udpComm = UDPcomm(MCAST_PORT)
+		thread.start_new_thread(udpComm.listen,(10, stopReciving, ))
 		server = FileServer('localhost', 30666)
 		server.main()
