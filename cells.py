@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
-import os, pygame, random, thread, time, deamonize, sys, socket, struct, communication
+import os
+import pygame
+import random
+import thread
+import time
+import deamonize
+import sys
+import communication
+from udp import *
+from config import *
 from pygame.color import THECOLORS
 
 
-SCREEN_WIDTH = 300
-SCREEN_HEIGHT = 300
-MAX_SPEED = 20
-RUNNING = True
-
-MCAST_GRP = '224.1.1.1'
-MCAST_PORT = 30667
-
-
-MIN_SEGS = 5
-MAX_SEGS = 10
-
-TARGET_IPS = ['localhost'] 
-WORM_GATE_PORT = 30666
 
 def ChangeRunningToFalse():
 	global RUNNING
@@ -78,40 +73,6 @@ def display_worm_forever():
     print 'display thread terminated'
 
 
-class UDPcomm():
-    '''
-    Class for UDP communictation
-    found some implementation http://stackoverflow.com/questions/603852/multicast-in-python
-    '''
-    def __init__(self, PORT):
-		self.reciveSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-		self.reciveSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		self.reciveSock.bind(('', MCAST_PORT))
-		mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
-		self.reciveSock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-    
-		self.sendSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-		self.sendSock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-		self.port = PORT
-		
-    def send(self, data):
-        self.senSock.sendto(data, (MCAST_GRP, self.port))
-
-    def listen(self, length, result, die):
-		try:
-			while RUNNING:
-				received = self.reciveSock.recv(length)
-
-				if received == 'die':
-					die()
-					return
-				
-				result (float(received))
-				
-                        
-		except:
-				print "some kind of weird error"
-        
 
 class WormSegment():
 	def __init__(self):
@@ -124,10 +85,10 @@ class WormSegment():
 		"""
 		Running the main code for the worm
 		"""
-		time.sleep(2)
+		time.sleep(1)
 		print self.heartbeatreciver
 		self.propagate()
-		#time.sleep(2)
+		time.sleep(5)
 		print "i should have propagated" 
 		self.killMySelf()
 	
