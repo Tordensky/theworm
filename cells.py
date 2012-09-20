@@ -23,6 +23,7 @@ def ChangeRunningToFalse():
 	sys.stdout.flush()
 	pygame.display.quit()
 	RUNNING = False
+	os._exit()
 	
 	
 #bad name for a sprite object
@@ -125,18 +126,20 @@ class WormSegment():
 		"""
 		time.sleep(2)
 		print self.heartbeatreciver
-		#self.propagate()
+		self.propagate()
 		#time.sleep(2)
 		print "i should have propagated" 
-		#self.killMySelf()
+		self.killMySelf()
 	
 	def propagate(self):
 		"""
 		This fuction is responsible for spreading itself to another node
 		"""
-		target = TARGET_IPS[random.randint(0, len(TARGET_IPS) - 1)]
-		communication.FileClient().sendFile("/tmp/inf3200/asv009/theworm.zip",target, WORM_GATE_PORT)
-	
+		
+		if RUNNING == True:
+			target = TARGET_IPS[random.randint(0, len(TARGET_IPS) - 1)]
+			communication.FileClient().sendFile("/tmp/inf3200/asv009/theworm.zip",target, WORM_GATE_PORT)
+		
 	def sendHeartBeat(self):
 		"""
 		Broadcasts a heartbeat to all the rest of the worms
@@ -163,6 +166,12 @@ class WormSegment():
 		Simply stops all the python threads and quits
 		"""
 		ChangeRunningToFalse()
+		
+	def checkIfEmergencyKillSingalIsActive(self):
+		"""
+		Check if the kill file is active
+		"""
+		pass
 
 	def updateHeartBeatCount(self, count):
 		self.heartbeatreciver += count
@@ -178,7 +187,7 @@ if __name__ == "__main__":
 	
 	thread.start_new_thread(display_worm_forever, ())
 	worm = WormSegment()
-	#worm.listenForIncommingHeartBeats()
+	worm.listenForIncommingHeartBeats()
 	
 	print "I am running"
 

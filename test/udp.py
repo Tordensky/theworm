@@ -9,3 +9,9 @@ sendSock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
 
 
 sendSock.sendto("die", (MCAST_GRP, MCAST_PORT))
+
+sendSock.sendto("die", (MCAST_GRP, MCAST_PORT))
+sendSock.sendto("die", (MCAST_GRP, MCAST_PORT))
+sendSock.sendto("die", (MCAST_GRP, MCAST_PORT))
+sendSock.sendto("die", (MCAST_GRP, MCAST_PORT))
+sendSock.sendto("die", (MCAST_GRP, MCAST_PORT))
