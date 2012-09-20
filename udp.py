@@ -23,16 +23,16 @@ class UDPcomm():
 
     def listen(self, length, die, result):
 		try:
-			while RUNNING:
+			while True:
 				received = self.reciveSock.recv(length)
 
 				if received == 'die':
 					die()
-					return
-				
-				result += (float(received))
+				else:
+					result += (float(received))
 				
                         
-		except:
-				print "some kind of weird error"
+		except Exception as e:
+				print "some kind of weird upd error"
+				print e.args
         
