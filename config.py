@@ -9,8 +9,12 @@ RUNNING = True
 MIN_SEGS = 5
 MAX_SEGS = 10
 
+TARGET_IPS = []
+for i in range(0,7):
+	for j in range(0,3):
+		TARGET_IPS.append('tile-%d-%d'%(i,j))
 TARGET_IPS = ['localhost'] 
 WORM_GATE_PORT = 30666
 
-MAX_WORM_SEGS = 3
-MIN_WORM_SEGS = 2
+MAX_WORM_SEGS = 20
+MIN_WORM_SEGS = 10 
