@@ -7,6 +7,7 @@ import time
 import deamonize
 import sys
 import communication
+import math
 from udp import *
 from config import *
 from pygame.color import THECOLORS
@@ -16,9 +17,9 @@ from pygame.color import THECOLORS
 def ChangeRunningToFalse():
 	global RUNNING
 	sys.stdout.flush()
-	pygame.display.quit()
+	#pygame.display.quit()
 	RUNNING = False
-	os._exit()
+	os._exit(0)
 	
 	
 #bad name for a sprite object
@@ -79,18 +80,26 @@ class WormSegment():
 		"""
 		The code for the worm segment
 		"""
+		self.sendHeartBeatIntervall = 100
+		self.estimateHartBeatIntervall = 500
 		self.heartbeatreciver = 0.0
 		self.udpComm = UDPcomm(MCAST_PORT)
 	def main(self):
 		"""
 		Running the main code for the worm
 		"""
-		time.sleep(1)
-		print self.heartbeatreciver
-		self.propagate()
-		time.sleep(5)
-		print "i should have propagated" 
-		self.killMySelf()
+		#time.sleep(1)
+		#print self.heartbeatreciver
+		#self.propagate()
+		#time.sleep(5)
+		self.listenForIncommingHeartBeats()
+		thread.start_new_thread(self.sendHeartBeat,())
+		while RUNNING:
+			time.sleep(self.estimateHartBeatIntervall/1000.0)
+			self.estimateNumberOfWormSegment()
+			
+			
+	
 	
 	def propagate(self):
 		"""
@@ -105,22 +114,34 @@ class WormSegment():
 		"""
 		Broadcasts a heartbeat to all the rest of the worms
 		"""
-		pass
+		while RUNNING:
+			self.udpComm.send(self.sendHeartBeatIntervall)
+			time.sleep(self.sendHeartBeatIntervall / 1000.0)
+		
 	
 	def estimateNumberOfWormSegment(self):
 		"""
 		Estimates how many worms are in play 
 		"""
 		
-		#Will get a raise condition here, but we don't care about it since it's only a estimate
+		#Will get a race condition here, but we don't care about it since it's only a estimate
+		numberOfSegments = self.heartbeatreciver/self.estimateHartBeatIntervall
+		math.ceil(numberOfSegments)
 		self.heartbeatreciver = 0.0
+		print "number of estimated segments" , numberOfSegments
 	
 	def listenForIncommingHeartBeats(self):
 		"""
 		Listen for all the heartbeats from the rest of the worm segments
 		"""
 		
-		thread.start_new_thread(self.udpComm.listen,(10, self.killMySelf, self.updateHeartBeatCount))
+		thread.start_new_thread(self.udpComm.listen,(10, self.killMySelf, self.increaseHeartBeatCount))
+	
+	def increaseHeartBeatCount(self, count):
+		"""
+		Increases the heartbeat count
+		"""
+		self.heartbeatreciver += count
 	
 	def killMySelf(self):
 		"""
@@ -141,20 +162,11 @@ class WormSegment():
 
 if __name__ == "__main__":
 	
-	#Just to make the input file
-	#new_file = open(path + '/input', 'w')
-	#new_file.close()
 	deamonize.daemonize('dev/null', 'output', 'error')
-	
+	os.putenv('DISPLAY', ':0') # Attach to local display
 	thread.start_new_thread(display_worm_forever, ())
 	worm = WormSegment()
-	worm.listenForIncommingHeartBeats()
 	
-	print "I am running"
-
-	while RUNNING:
-		# TODO: Start implementing your worm here
-		worm.main()
-		print 'running...'
-		time.sleep(1)
+	print "Startign the worm segment"
+	worm.main()
 	time.sleep(0.1); # Give display thread some time to terminate
