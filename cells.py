@@ -125,24 +125,33 @@ class WormSegment():
 		"""
 		
 		#Will get a race condition here, but we don't care about it since it's only a estimate
-		numberOfSegments = self.heartbeatreciver/self.estimateHartBeatIntervall
-		math.ceil(numberOfSegments)
+		numberOfSegments = self.heartbeatreciver/float(self.estimateHartBeatIntervall)
+		numberOfSegments = math.ceil(numberOfSegments)
 		self.heartbeatreciver = 0.0
+		
 		print "number of estimated segments" , numberOfSegments
-	
+		
+		if numberOfSegments > MAX_WORM_SEGS:
+			self.shouldIKillMyself(numberOfSegments)
+
+	def shouldIKillMyself(self, numberOfSegmentsAlive):
+		print "number of segs alive and max", numberOfSegmentsAlive, MAX_WORM_SEGS
+		prosent = MAX_WORM_SEGS/numberOfSegmentsAlive * 100
+		killAnswer = random.randrange(1, 101)
+		
+		print killAnswer, prosent
+		if killAnswer >= prosent:
+			self.killMySelf()
+
 	def listenForIncommingHeartBeats(self):
 		"""
 		Listen for all the heartbeats from the rest of the worm segments
 		"""
-		
-		thread.start_new_thread(self.udpComm.listen,(10, self.killMySelf, self.increaseHeartBeatCount))
+		thread.start_new_thread(self.udpComm.listen,(10, self.killMySelf, self.updateHeartBeatCount))
 	
-	def increaseHeartBeatCount(self, count):
-		"""
-		Increases the heartbeat count
-		"""
-		self.heartbeatreciver += count
-	
+
+
+
 	def killMySelf(self):
 		"""
 		Simply stops all the python threads and quits
