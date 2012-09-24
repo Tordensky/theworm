@@ -15,7 +15,8 @@ def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
     os.umask(0)
     os.setsid( )
     
-    
+    if stdout == '/dev/null':
+	return
     # The process is now daemonized, redirect standard file descriptors.
     for f in sys.stdout, sys.stderr: f.flush( )
     si = file(stdin, 'r')

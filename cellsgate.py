@@ -2,13 +2,14 @@
 import commands
 import communication
 import shutil
+import deamonize
 import os
+import sys
 
 
 
-
-port = 30666
-ip = 'localhost';
+port = 30689
+ip = '0.0.0.0';
 
 
 def deleteAllInFolder(folder):
@@ -23,7 +24,9 @@ class CellGate():
     """
     Start up wormgate
     """
-    os.makedirs("/tmp/inf3200/asv009/")
+    if not os.path.exists("/tmp/inf3200/asv009/"):
+    	os.makedirs("/tmp/inf3200/asv009/")
+   
     self.fileserver = communication.FileServer(ip, port)
     self.fileserver.main();
     
@@ -40,10 +43,7 @@ class CellGate():
 
 
 if __name__ == "__main__":
-	try:
-		cellgate = CellGate()
-		cellgate.startup()
-	except:
-		deleteAllInFolder("/tmp/inf3200/asv009")
-
-  
+	deamonize.daemonize()
+	cellgate = CellGate()
+	cellgate.startup()
+	

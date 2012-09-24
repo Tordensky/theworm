@@ -6,11 +6,13 @@ SCREEN_HEIGHT = 300
 MAX_SPEED = 20
 RUNNING = True
 
-MIN_SEGS = 5
-MAX_SEGS = 10
 
-TARGET_IPS = ['localhost'] 
-WORM_GATE_PORT = 30666
+TARGET_IPS = []
+for i in range(0,7):
+	for j in range(0,4):
+		TARGET_IPS.append('tile-%d-%d'%(i,j))
+#TARGET_IPS = ['localhost'] 
+WORM_GATE_PORT = 30689
 
-MAX_WORM_SEGS = 3
-MIN_WORM_SEGS = 2
+MAX_WORM_SEGS = 40
+MIN_WORM_SEGS = 30 

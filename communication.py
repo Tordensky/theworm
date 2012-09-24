@@ -63,6 +63,8 @@ class FileClient():
 			cs.close()
 		except:
 			print "Error while sending file"
+			print "addr: %s port %d" % (addr, port)
+			print sys.exc_info()
                 
 
 class MessageHandler():
@@ -128,9 +130,10 @@ if __name__ == "__main__":
 	#send in more arguments to make the client run, insert nothing to get the server to run
 	if len(sys.argv) == 2:
 		print "Starting Client test"
-		FileClient.sendFile("theworm.zip", 'localhost', 30666)
+		FileClient.sendFile("theworm.zip", 
+'tile-0-0', 30689)
 		
 	else:
 		print "Starting Server test"
-		server = FileServer('localhost', 30666)
+		server = FileServer('tile-0-0', 30689)
 		server.main()

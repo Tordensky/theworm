@@ -133,15 +133,27 @@ class WormSegment():
 		
 		if numberOfSegments > MAX_WORM_SEGS:
 			self.shouldIKillMyself(numberOfSegments)
+		elif numberOfSegments < MIN_WORM_SEGS:
+			self.shouldIPropagate(numberOfSegments)
 
 	def shouldIKillMyself(self, numberOfSegmentsAlive):
-		print "number of segs alive and max", numberOfSegmentsAlive, MAX_WORM_SEGS
+		#print "number of segs alive and max", numberOfSegmentsAlive, MAX_WORM_SEGS
 		prosent = MAX_WORM_SEGS/numberOfSegmentsAlive * 100
 		killAnswer = random.randrange(1, 101)
 		
-		print killAnswer, prosent
+		print "killanswer and prosent: ", killAnswer, prosent
 		if killAnswer >= prosent:
 			self.killMySelf()
+
+	def shouldIPropagate(self, numberOfSegmentsAlive):
+		#print "number of segs alive and max", numberOfSegmentsAlive, MAX_WORM_SEGS
+		prosent = numberOfSegmentsAlive/MIN_WORM_SEGS * 100
+		propagateAnswer = random.randrange(1, 101)
+		
+		print "reproduceanswer and prosent: ", propagateAnswer, prosent
+		if propagateAnswer < prosent:
+			self.propagate()
+
 
 	def listenForIncommingHeartBeats(self):
 		"""
