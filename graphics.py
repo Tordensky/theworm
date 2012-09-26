@@ -14,11 +14,20 @@ class Graphics(object):
         os.environ['SDL_VIDEO_WINDOW_POS'] = str(x) + ',' + str(y)
     
         pygame.init()
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.NOFRAME)
         
     def run(self):
-        while(1):
-            pass
+        RUNNING = True
+        
+        while(RUNNING):
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    RUNNING = False
+             
+            self.screen.fill((0, 0, 0))
+            
+            pygame.display.update()
+            
         
 if __name__ == "__main__":
     graf = Graphics()
