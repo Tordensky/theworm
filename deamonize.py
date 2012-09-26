@@ -15,13 +15,18 @@ def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
     os.umask(0)
     os.setsid( )
     
-    if stdout == '/dev/null':
-	return
     # The process is now daemonized, redirect standard file descriptors.
-    for f in sys.stdout, sys.stderr: f.flush( )
+    if stdout == '/dev/null' or stdout[0] == '/':
+        for f in sys.stdout, sys.stderr: f.flush( )
+        so = file(stdout, 'a+')
+        se = file(stderr, 'a+', 0)
+    
+    else:
+        for f in sys.stdout, sys.stderr: f.flush( )
+        so = file(__file__[:-13] + stdout, 'a+')
+        se = file(__file__[:-13] + stderr, 'a+', 0)
+
     si = file(stdin, 'r')
-    so = file(__file__[:-12] + stdout, 'a+')
-    se = file(__file__[:-12] + stderr, 'a+', 0)
     os.dup2(si.fileno( ), sys.stdin.fileno( ))
     os.dup2(so.fileno( ), sys.stdout.fileno( ))
     os.dup2(se.fileno( ), sys.stderr.fileno( ))

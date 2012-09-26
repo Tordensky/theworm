@@ -20,6 +20,7 @@ class FileServer():
 		self.host = socket.gethostname()
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		print addr, port
 		self.sock.bind((addr, port))
 		self.sock.listen(5)
 
@@ -101,16 +102,18 @@ class FileHandler():
     
 	def main(self):
 		dataDict = MessageHandler.DataToDict(self.cfile)
-		self.saveDataToFile("/tmp/inf3200/asv009/theworm.zip", dataDict["Payload:"])
+		self.saveDataToFile( TMP_FOLDER + "theworm.zip", dataDict["Payload:"])
 		self.runCode()
 		print "Got data, unziped it and made it run"
     
 	def runCode(self):
 		global NumberOfWormsStarted
-		os.makedirs("/tmp/inf3200/asv009/" + str(NumberOfWormsStarted))
-		res, text = commands.getstatusoutput( "unzip -o /tmp/inf3200/asv009/theworm.zip -d /tmp/inf3200/asv009/" + str(NumberOfWormsStarted) )
-		res, text = commands.getstatusoutput("python /tmp/inf3200/asv009/" + str(NumberOfWormsStarted) + "/cells.py")
 		NumberOfWormsStarted += 1
+		print "Starting next worm nr: ", NumberOfWormsStarted
+		os.makedirs(TMP_FOLDER + str(NumberOfWormsStarted))
+		res, text = commands.getstatusoutput( "unzip -o "+ TMP_FOLDER +"theworm.zip -d " + TMP_FOLDER + str(NumberOfWormsStarted) )
+		res, text = commands.getstatusoutput("python "+ TMP_FOLDER + str(NumberOfWormsStarted) + "/cells.py")
+		
 			
 		
 	def saveDataToFile(self, filename, data):
@@ -131,9 +134,9 @@ if __name__ == "__main__":
 	#send in more arguments to make the client run, insert nothing to get the server to run
 	if len(sys.argv) == 2:
 		print "Starting Client test"
-		FileClient.sendFile("theworm.zip", TARGET_IPS[random.randint(0, len(TARGET_IPS) - 1)] , 30689)
+		FileClient.sendFile("theworm.zip", TARGET_IPS[random.randint(0, len(TARGET_IPS) - 1)] , WORM_GATE_PORT)
 		
 	else:
 		print "Starting Server test"
-		server = FileServer('tile-0-0', 30689)
+		server = FileServer('tile-0-0', WORM_GATE_PORT)
 		server.main()

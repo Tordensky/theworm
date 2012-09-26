@@ -108,7 +108,7 @@ class WormSegment():
 		
 		if RUNNING == True:
 			target = TARGET_IPS[random.randint(0, len(TARGET_IPS) - 1)]
-			communication.FileClient().sendFile("/tmp/inf3200/asv009/theworm.zip",target, WORM_GATE_PORT)
+			communication.FileClient().sendFile( TMP_FOLDER +  "theworm.zip",target, WORM_GATE_PORT)
 		
 	def sendHeartBeat(self):
 		"""
@@ -151,7 +151,7 @@ class WormSegment():
 		propagateAnswer = random.randrange(1, 101)
 		
 		print "reproduceanswer and prosent: ", propagateAnswer, prosent
-		if propagateAnswer < prosent:
+		if propagateAnswer >= prosent:
 			self.propagate()
 
 

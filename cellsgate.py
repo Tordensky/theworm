@@ -5,12 +5,7 @@ import shutil
 import deamonize
 import os
 import sys
-
-
-
-port = 30689
-ip = '0.0.0.0';
-
+from config import *
 
 def deleteAllInFolder(folder):
 	shutil.rmtree(folder)
@@ -24,10 +19,13 @@ class CellGate():
     """
     Start up wormgate
     """
-    if not os.path.exists("/tmp/inf3200/asv009/"):
-    	os.makedirs("/tmp/inf3200/asv009/")
-   
-    self.fileserver = communication.FileServer(ip, port)
+    if os.path.exists(TMP_FOLDER):
+    	deleteAllInFolder(TMP_FOLDER);
+	
+	os.makedirs(TMP_FOLDER)
+    
+   	deamonize.daemonize('dev/null', TMP_FOLDER + 'output', TMP_FOLDER + 'error')
+    self.fileserver = communication.FileServer(LISTEN_PORT, WORM_GATE_PORT)
     self.fileserver.main();
     
     
@@ -43,7 +41,6 @@ class CellGate():
 
 
 if __name__ == "__main__":
-	deamonize.daemonize()
 	cellgate = CellGate()
 	cellgate.startup()
 	
