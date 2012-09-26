@@ -29,18 +29,15 @@ class WormSegment():
 		"""
 		The code for the worm segment
 		"""
-		self.sendHeartBeatIntervall = 100
-		self.estimateHartBeatIntervall = 500
+		self.sendHeartBeatIntervall = 20
+		self.estimateHartBeatIntervall = 200
 		self.heartbeatreciver = 0.0
 		self.udpComm = UDPcomm(MCAST_PORT)
 	def main(self):
 		"""
 		Running the main code for the worm
 		"""
-		#time.sleep(1)
-		#print self.heartbeatreciver
-		#self.propagate()
-		#time.sleep(5)
+
 		self.listenForIncommingHeartBeats()
 		thread.start_new_thread(self.sendHeartBeat,())
 		boids = Graphics(ChangeRunningToFalse)

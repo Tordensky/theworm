@@ -9,15 +9,16 @@ from miniboids import *
 
 class Graphics(object):
     def __init__(self, dieFunction):
+		self.dieFunction = dieFunction
+        
+    def run(self):
+		
 		pygame.init()
 		x = random.randint(0, 1024 - SCREEN_WIDTH)
 		y = random.randint(0, 800 - SCREEN_HEIGHT)
 		os.environ['SDL_VIDEO_WINDOW_POS'] = str(x) + ',' + str(y)
 		self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-		self.dieFunction = dieFunction
-        
-    def run(self):
-		global RUNNING
+		
 		# How many boids to simulate
 		boids = []
 		for x in range(random.randrange(5, 10)):		
