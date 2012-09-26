@@ -30,3 +30,7 @@ examples/
 .mr.developer.cfg
 
 *~
+
+.project
+.pydevproject
+.settings/
