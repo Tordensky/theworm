@@ -138,5 +138,5 @@ if __name__ == "__main__":
 		
 	else:
 		print "Starting Server test"
-		server = FileServer('tile-0-0', WORM_GATE_PORT)
+		server = FileServer(LISTEN_PORT, WORM_GATE_PORT)
 		server.main()

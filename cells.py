@@ -80,8 +80,8 @@ class WormSegment():
 		"""
 		The code for the worm segment
 		"""
-		self.sendHeartBeatIntervall = 100
-		self.estimateHartBeatIntervall = 500
+		self.sendHeartBeatIntervall = 10
+		self.estimateHartBeatIntervall = 100
 		self.heartbeatreciver = 0.0
 		self.udpComm = UDPcomm(MCAST_PORT)
 	def main(self):
