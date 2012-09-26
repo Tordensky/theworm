@@ -3,11 +3,11 @@ import math
 import time
 import random
 from pygame.locals import*
-pygame.init()
+from config import *
 
-screen_res = (250, 250)
 
-screen = pygame.display.set_mode((screen_res), 0, 32)
+screen_res = (SCREEN_WIDTH, SCREEN_HEIGHT)
+
 
 class Vector2D:
 	def __init__(self, x, y):
@@ -46,7 +46,7 @@ class Vector2D:
 
 
 class Boid(Vector2D):
-	def __init__(self):
+	def __init__(self, screen):
 		Vector2D.__init__(self, 0, 0)
 		# Movement
 		self.pos = Vector2D((screen.get_width()*random.random()), (screen.get_height()*random.random()))
@@ -174,7 +174,7 @@ class Boid(Vector2D):
 
 					
 
-	def move(self, time_passed_seconds):
+	def move(self, time_passed_seconds, screen):
 		# Calculate new speed vector
 		self.speed = self.speed + self.center_flock + self.average_heading_flock + self.avoid_collison_flock_member + self.avoid_collison_object + self.avoid_collison_hoik
 		
@@ -219,13 +219,13 @@ class Boid(Vector2D):
                         self.speed.y = -abs(self.speed.y)
 		
 	# Draw tail
-	def draw_vec_from_self(self):
+	def draw_vec_from_self(self, screen):
         	tail = self.speed.normalized()
 		pygame.draw.line(screen, self.color, (self.pos.x, self.pos.y), (self.pos.x - tail.x * self.tail_length, self.pos.y - tail.y * self.tail_length), self.tail_stroke)
 	
 	# Draw self
-	def draw(self):
-		self.draw_vec_from_self()
+	def draw(self, screen):
+		self.draw_vec_from_self(screen)
 		pygame.draw.circle(screen, self.color, (int(self.pos.x), int(self.pos.y)), self.radius)
 		
 class Hoik(Boid):
@@ -362,48 +362,4 @@ class circle_object(Vector2D):
 	def draw(self):
 		pygame.draw.circle(screen, self.color, (self.pos.x, self.pos.y), self.radius)
 
-# How many boids to simulate
-boids = []
-for x in range(random.randrange(5, 10)):		
-	boids.append(Boid())
-
-# How many hoiks to simulate
-hoiks = []
-for y in range(0):		
-	hoiks.append(Hoik())
-
-# Game objects
-objects = [] 
-#[circle_object(30, 100, 20, (0, 0, 0))]
-	
-clock = pygame.time.Clock()
-
-SCREEN_COLOR = (random.randrange(0,255), random.randrange(0,255), random.randrange(0,255))
-
-while True:
-        for event in pygame.event.get():
-                key = pygame.key.get_pressed()
-                if event.type == QUIT or key[pygame.K_ESCAPE]:
-                        exit()
-	pygame.draw.rect(screen, (SCREEN_COLOR), (0, 0, screen.get_width(), screen.get_height()))
-        time_passed = clock.tick(30) # limit to x FPS 
-        time_passed_seconds = time_passed / 1000.0
-
-	# Update boids
-	for boid in boids:
-		boid.update_vectors(boids, hoiks, objects)
-		boid.move(time_passed_seconds)
-		boid.draw()
-	
-	# Update Hoiks
-#	for hoik in hoiks:
-#		hoik.update_vectors(boids, hoiks, objects)
-#		hoik.move(time_passed_seconds)
-#		hoik.draw()
-	
-	# Draw Objects
-#	for obj in objects:
-#		obj.draw()
-		
-	pygame.display.update()
 	

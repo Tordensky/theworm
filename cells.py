@@ -11,7 +11,7 @@ import math
 from udp import *
 from config import *
 from pygame.color import THECOLORS
-
+from graphics import * 
 
 
 def ChangeRunningToFalse():
@@ -21,57 +21,6 @@ def ChangeRunningToFalse():
 	RUNNING = False
 	os._exit(0)
 	
-	
-#bad name for a sprite object
-class MyObject(pygame.sprite.Sprite):  
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.x = 0
-        self.y = 0
-        self.xadd = 5
-        self.yadd = 5
-        self.rect = pygame.rect.Rect(self.x, self.y, 25, 25)
-              
-    def update(self):
-        self.x += self.xadd
-        self.y += self.yadd
-        
-        if (self.x >= SCREEN_WIDTH - self.rect.width):
-            self.xadd = -random.randint(1, MAX_SPEED)
-        
-        if (self.x <= 0):
-            self.xadd = random.randint(1, MAX_SPEED)
-            
-        if (self.y >= SCREEN_HEIGHT - self.rect.height):
-            self.yadd = -random.randint(1, MAX_SPEED)
-            
-        if (self.y <= 0):
-            self.yadd = random.randint(1, MAX_SPEED)
-        
-        self.rect.topleft = (self.x, self.y)
-
-#should change this to display somethign else
-def display_worm_forever():
-    x = random.randint(0, 1024 - SCREEN_WIDTH)
-    y = random.randint(0, 800 - SCREEN_HEIGHT)
-    os.environ['SDL_VIDEO_WINDOW_POS'] = str(x) + ',' + str(y)
-    
-    pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_WIDTH))
-
-    clock = pygame.time.Clock()
-    myObject = MyObject()        
-    while RUNNING:
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				ChangeRunningToFalse()
-				break
-		clock.tick(100)
-		myObject.update()    
-		screen.fill((0, 0, 0))
-		pygame.draw.rect(screen, pygame.color.THECOLORS['blue'], myObject.rect)
-		pygame.display.update()
-    print 'display thread terminated'
 
 
 
@@ -80,8 +29,8 @@ class WormSegment():
 		"""
 		The code for the worm segment
 		"""
-		self.sendHeartBeatIntervall = 10
-		self.estimateHartBeatIntervall = 100
+		self.sendHeartBeatIntervall = 100
+		self.estimateHartBeatIntervall = 500
 		self.heartbeatreciver = 0.0
 		self.udpComm = UDPcomm(MCAST_PORT)
 	def main(self):
@@ -94,11 +43,13 @@ class WormSegment():
 		#time.sleep(5)
 		self.listenForIncommingHeartBeats()
 		thread.start_new_thread(self.sendHeartBeat,())
+		boids = Graphics(ChangeRunningToFalse)
+		thread.start_new_thread(boids.run, ())
 		while RUNNING:
 			time.sleep(self.estimateHartBeatIntervall/1000.0)
 			self.estimateNumberOfWormSegment()
 			
-			
+		
 	
 	
 	def propagate(self):
@@ -185,9 +136,9 @@ if __name__ == "__main__":
 	
 	deamonize.daemonize('dev/null', 'output', 'error')
 	os.putenv('DISPLAY', ':0') # Attach to local display
-	thread.start_new_thread(display_worm_forever, ())
-	worm = WormSegment()
+
 	
+	worm = WormSegment()
 	print "Startign the worm segment"
 	worm.main()
 	time.sleep(0.1); # Give display thread some time to terminate

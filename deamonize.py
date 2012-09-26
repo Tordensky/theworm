@@ -23,8 +23,8 @@ def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
     
     else:
         for f in sys.stdout, sys.stderr: f.flush( )
-        so = file(__file__[:-13] + stdout, 'a+')
-        se = file(__file__[:-13] + stderr, 'a+', 0)
+        so = file(__file__[:-12] + stdout, 'a+')
+        se = file(__file__[:-12] + stderr, 'a+', 0)
 
     si = file(stdin, 'r')
     os.dup2(si.fileno( ), sys.stdin.fileno( ))
