@@ -8,11 +8,11 @@ RUNNING = True
 
 
 TARGET_IPS = []
-for i in range(0,7):
-	for j in range(0,4):
-		TARGET_IPS.append('tile-%d-%d'%(i,j))
-#TARGET_IPS = ['localhost'] 
+#for i in range(0,7):
+	#for j in range(0,4):
+		#TARGET_IPS.append('tile-%d-%d'%(i,j))
+TARGET_IPS = ['localhost'] 
 WORM_GATE_PORT = 30689
 
-MAX_WORM_SEGS = 40
-MIN_WORM_SEGS = 30 
+MAX_WORM_SEGS = 10
+MIN_WORM_SEGS = 5 

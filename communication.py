@@ -5,6 +5,7 @@ import sys
 import commands
 import os
 import time
+import random
 from udp import *
 from config import *
 
@@ -130,8 +131,7 @@ if __name__ == "__main__":
 	#send in more arguments to make the client run, insert nothing to get the server to run
 	if len(sys.argv) == 2:
 		print "Starting Client test"
-		FileClient.sendFile("theworm.zip", 
-'tile-0-0', 30689)
+		FileClient.sendFile("theworm.zip", TARGET_IPS[random.randint(0, len(TARGET_IPS) - 1)] , 30689)
 		
 	else:
 		print "Starting Server test"
