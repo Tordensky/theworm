@@ -41,7 +41,7 @@ class Graphics(object):
 			time_passed = clock.tick(30) # limit to x FPS 
 			time_passed_seconds = time_passed / 1000.0
 
-			self.screen.blit(myFont.render(self.num_segs(), 0, (color)), (10,10))
+			self.screen.blit(myFont.render(str(int(self.num_segs())), 0, (color)), (10,10))
 			
 			# Update boids
 			for boid in boids:

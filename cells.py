@@ -29,10 +29,11 @@ class WormSegment():
 		"""
 		The code for the worm segment
 		"""
-		self.sendHeartBeatIntervall = 20
-		self.estimateHartBeatIntervall = 200
+		self.sendHeartBeatIntervall = 100
+		self.estimateHartBeatIntervall = 500
 		self.heartbeatreciver = 0.0
 		self.udpComm = UDPcomm(MCAST_PORT)
+		self.numberOfSegments = 0
 	def main(self):
 		"""
 		Running the main code for the worm
@@ -40,7 +41,7 @@ class WormSegment():
 
 		self.listenForIncommingHeartBeats()
 		thread.start_new_thread(self.sendHeartBeat,())
-		boids = Graphics(ChangeRunningToFalse, get_num_segments)
+		boids = Graphics(ChangeRunningToFalse, self.get_num_segments)
 		thread.start_new_thread(boids.run, ())
 		while RUNNING:
 			time.sleep(self.estimateHartBeatIntervall/1000.0)
@@ -118,10 +119,9 @@ class WormSegment():
 		"""
 		thread.start_new_thread(self.udpComm.listen,(10, self.killMySelf, self.updateHeartBeatCount))
 	
-
-        def get_num_segments(self):
-            return self.numberOfSegments
-
+	def get_num_segments(self):
+		return self.numberOfSegments
+		
 	def killMySelf(self):
 		"""
 		Simply stops all the python threads and quits

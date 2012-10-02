@@ -9,6 +9,7 @@ from config import *
 import time
 import thread
 import pygame
+import random
 
 def deleteAllInFolder(folder):
 	shutil.rmtree(folder)
@@ -17,12 +18,22 @@ class CellGate():
   def __init__(self):
     self.numberofwormsstarted = 0;
   
-  def showWormGateWindow():
+  def showWormGateWindow(self):
 	pygame.init()
-	x = 100
+	x = 150
 	y = 0
 	os.environ['SDL_VIDEO_WINDOW_POS'] = str(x) + ',' + str(y)
-	self.screen = pygame.display.set_mode((100, 100))  
+	self.screen = pygame.display.set_mode((150, 150))  
+	
+	color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+	myFont = pygame.font.SysFont("None", 100)
+	while(True):
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				sys.stdout.flush()
+				os._exit(0)
+		self.screen.blit(myFont.render(str(self.numberofwormsstarted), 0, (color)), (10,10))
+		pygame.display.update()
   
   def startup(self):
     
@@ -39,7 +50,6 @@ class CellGate():
     thread.start_new_thread(self.die,())
     
     thread.start_new_thread(self.showWormGateWindow, ())
-		
     
     self.fileserver = communication.FileServer(LISTEN_PORT, WORM_GATE_PORT)
     self.fileserver.main()
