@@ -40,7 +40,7 @@ class WormSegment():
 
 		self.listenForIncommingHeartBeats()
 		thread.start_new_thread(self.sendHeartBeat,())
-		boids = Graphics(ChangeRunningToFalse)
+		boids = Graphics(ChangeRunningToFalse, get_num_segments)
 		thread.start_new_thread(boids.run, ())
 		while RUNNING:
 			time.sleep(self.estimateHartBeatIntervall/1000.0)
@@ -119,7 +119,8 @@ class WormSegment():
 		thread.start_new_thread(self.udpComm.listen,(10, self.killMySelf, self.updateHeartBeatCount))
 	
 
-
+        def get_num_segments(self):
+            return self.numberOfSegments
 
 	def killMySelf(self):
 		"""

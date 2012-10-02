@@ -8,8 +8,9 @@ from config import *
 from miniboids import *
 
 class Graphics(object):
-    def __init__(self, dieFunction):
+    def __init__(self, dieFunction, number_of_segments):
 		self.dieFunction = dieFunction
+		self.num_segs = number_of_segments
         
     def run(self):
 		
@@ -28,6 +29,9 @@ class Graphics(object):
 		clock = pygame.time.Clock()
 		SCREEN_COLOR = (random.randrange(0,255), random.randrange(0,255), random.randrange(0,255))
 		
+		myFont = pygame.font.SysFont("None", 300)
+		color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+		
 		while(RUNNING):
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -37,15 +41,19 @@ class Graphics(object):
 			time_passed = clock.tick(30) # limit to x FPS 
 			time_passed_seconds = time_passed / 1000.0
 
+			self.screen.blit(myFont.render(self.num_segs(), 0, (color)), (10,10))
+			
 			# Update boids
 			for boid in boids:
 				boid.update_vectors(boids,[], [])
 				boid.move(time_passed_seconds, self.screen)
 				boid.draw(self.screen)
-				
+			
+			
+			
 			pygame.display.update()
             
         
 if __name__ == "__main__":
-    graf = Graphics()
+    graf = Graphics(1)
     graf.run()
