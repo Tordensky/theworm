@@ -16,7 +16,7 @@ def deleteAllInFolder(folder):
 	
 class CellGate():
   def __init__(self):
-    self.numberofwormsstarted = 0;
+    self.numberofwormsstarted = 0
   
   def showWormGateWindow(self):
 	pygame.init()
@@ -24,7 +24,7 @@ class CellGate():
 	y = 0
 	os.environ['SDL_VIDEO_WINDOW_POS'] = str(x) + ',' + str(y)
 	self.screen = pygame.display.set_mode((150, 150))  
-	
+	SCREEN_COLOR = (random.randrange(0,255), random.randrange(0,255), random.randrange(0,255))
 	color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
 	myFont = pygame.font.SysFont("None", 100)
 	while(True):
@@ -32,6 +32,7 @@ class CellGate():
 			if event.type == pygame.QUIT:
 				sys.stdout.flush()
 				os._exit(0)
+		pygame.draw.rect(self.screen, (SCREEN_COLOR), (0, 0, self.screen.get_width(), self.screen.get_height()))
 		self.screen.blit(myFont.render(str(self.numberofwormsstarted), 0, (color)), (10,10))
 		pygame.display.update()
   
@@ -52,9 +53,11 @@ class CellGate():
     thread.start_new_thread(self.showWormGateWindow, ())
     
     self.fileserver = communication.FileServer(LISTEN_PORT, WORM_GATE_PORT)
-    self.fileserver.main()
+    self.fileserver.main(self.setNumberOfStartedSegmets)
     
-    
+  def setNumberOfStartedSegmets(self, number):
+	self.numberofwormsstarted = number
+	  
   def die(self):
     """
     Stop worm gate in case of big emergencies

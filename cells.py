@@ -29,8 +29,8 @@ class WormSegment():
 		"""
 		The code for the worm segment
 		"""
-		self.sendHeartBeatIntervall = 100
-		self.estimateHartBeatIntervall = 500
+		self.sendHeartBeatIntervall = 20
+		self.estimateHartBeatIntervall = 200
 		self.heartbeatreciver = 0.0
 		self.udpComm = UDPcomm(MCAST_PORT)
 		self.numberOfSegments = 0

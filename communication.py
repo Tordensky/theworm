@@ -24,12 +24,12 @@ class FileServer():
 		self.sock.bind((addr, port))
 		self.sock.listen(5)
 
-	def main(self):
+	def main(self, setNumberOfStartedSegmets):
 		try:
 			while True:
 				(connection, addr) = self.sock.accept()
 				print "Client connected", connection, addr
-				handler = FileHandler(connection)
+				handler = FileHandler(connection, setNumberOfStartedSegmets)
 				thread.start_new_thread(handler.main, ())
 				
 		except Exception as e:
@@ -96,9 +96,10 @@ class MessageHandler():
 
                 
 class FileHandler():
-	def __init__(self, conn):
+	def __init__(self, conn, setNumberOfStartedSegmets):
 		self.conn = conn
 		self.cfile = conn.makefile('rw', 0)
+		self.setNumberOfStartedSegmets = setNumberOfStartedSegmets
     
 	def main(self):
 		dataDict = MessageHandler.DataToDict(self.cfile)
@@ -109,6 +110,7 @@ class FileHandler():
 	def runCode(self):
 		global NumberOfWormsStarted
 		NumberOfWormsStarted += 1
+		self.setNumberOfStartedSegmets(NumberOfWormsStarted)
 		print "Starting next worm nr: ", NumberOfWormsStarted
 		os.makedirs(TMP_FOLDER + str(NumberOfWormsStarted))
 		res, text = commands.getstatusoutput( "unzip -o "+ TMP_FOLDER +"theworm.zip -d " + TMP_FOLDER + str(NumberOfWormsStarted) )
