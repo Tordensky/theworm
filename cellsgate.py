@@ -19,10 +19,10 @@ class CellGate():
   
   def showWormGateWindow():
 	pygame.init()
-	x = random.randint(0, 1024 - SCREEN_WIDTH)
-	y = random.randint(0, 800 - SCREEN_HEIGHT)
+	x = 100
+	y = 0
 	os.environ['SDL_VIDEO_WINDOW_POS'] = str(x) + ',' + str(y)
-	self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  
+	self.screen = pygame.display.set_mode((100, 100))  
   
   def startup(self):
     
@@ -38,11 +38,11 @@ class CellGate():
    	deamonize.daemonize('dev/null', TMP_FOLDER + 'output', TMP_FOLDER + 'error')
     thread.start_new_thread(self.die,())
     
-    thread.start_new_thread(boids.run, ())
+    thread.start_new_thread(self.showWormGateWindow, ())
 		
     
     self.fileserver = communication.FileServer(LISTEN_PORT, WORM_GATE_PORT)
-    self.fileserver.main();
+    self.fileserver.main()
     
     
   def die(self):
