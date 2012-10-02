@@ -49,8 +49,7 @@ class Graphics(object):
                 boid.move(time_passed_seconds, self.screen)
                 boid.draw(self.screen)
             
-            
-            
+
             pygame.display.update()
 
 
