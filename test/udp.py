@@ -1,7 +1,7 @@
 import socket
 import time
 
-MCAST_GRP = '224.1.1.1'
+MCAST_GRP = '10.1.255.255'
 MCAST_PORT = 30667
 
 sendSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)

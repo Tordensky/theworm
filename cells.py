@@ -53,10 +53,19 @@ class WormSegment():
 		"""
 		This fuction is responsible for spreading itself to another node
 		"""
-		
 		if RUNNING == True:
 			target = TARGET_IPS[random.randint(0, len(TARGET_IPS) - 1)]
 			communication.FileClient().sendFile( TMP_FOLDER +  "theworm.zip",target, WORM_GATE_PORT)
+			#if self.numberOfSegments <= 1:
+				#for i in range(0, BUCKET_SHOT):
+					#print i
+					#self.sendWormSegment()
+			#else:
+				#self.sendWormSegment()			
+	
+	def sendWormSegment(self):
+		target = TARGET_IPS[random.randint(0, len(TARGET_IPS) - 1)]
+		communication.FileClient().sendFile( TMP_FOLDER +  "theworm.zip",target, WORM_GATE_PORT)
 		
 	def sendHeartBeat(self):
 		"""
@@ -73,16 +82,16 @@ class WormSegment():
 		"""
 		
 		#Will get a race condition here, but we don't care about it since it's only a estimate
-		numberOfSegments = self.heartbeatreciver/float(self.estimateHartBeatIntervall)
-		numberOfSegments = math.ceil(numberOfSegments)
+		self.numberOfSegments = self.heartbeatreciver/float(self.estimateHartBeatIntervall)
+		self.numberOfSegments = math.ceil(self.numberOfSegments)
 		self.heartbeatreciver = 0.0
 		
-		print "number of estimated segments" , numberOfSegments
+		print "number of estimated segments" , self.numberOfSegments
 		
-		if numberOfSegments > MAX_WORM_SEGS:
-			self.shouldIKillMyself(numberOfSegments)
-		elif numberOfSegments < MIN_WORM_SEGS:
-			self.shouldIPropagate(numberOfSegments)
+		if self.numberOfSegments > MAX_WORM_SEGS:
+			self.shouldIKillMyself(self.numberOfSegments)
+		elif self.numberOfSegments < MIN_WORM_SEGS:
+			self.shouldIPropagate(self.numberOfSegments)
 
 	def shouldIKillMyself(self, numberOfSegmentsAlive):
 		#print "number of segs alive and max", numberOfSegmentsAlive, MAX_WORM_SEGS
