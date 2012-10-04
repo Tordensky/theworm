@@ -6,7 +6,7 @@ from config import *
 class UDPcomm():
 	'''
 	Class for UDP communictation
-	found some implementation http://stackoverflow.com/questions/603852/multicast-in-python
+	Based the code on what found at: http://stackoverflow.com/questions/603852/multicast-in-python
 	'''
 	def __init__(self, PORT):
 		'''

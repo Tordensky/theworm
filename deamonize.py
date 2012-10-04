@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+#Found this code in the rocksvv cluster in the example code. the code has some minor tweeks to work togheter with our solution
 import sys, os
 def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
 	# Perform first fork.
