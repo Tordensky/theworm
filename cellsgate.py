@@ -47,7 +47,7 @@ class CellGate():
 								sys.stdout.flush()
 								os._exit(0)
 				pygame.draw.rect(self.screen, (SCREEN_COLOR), (0, 0, self.screen.get_width(), self.screen.get_height()))
-				time_passed = clock.tick(5) # limit to x FPS 
+				time_passed = clock.tick(1) # limit to x FPS 
 				self.screen.blit(myFont.render(str(self.numberofwormsstarted), 0, (color)), (10,10))
 				pygame.display.update()
 	

@@ -25,7 +25,7 @@ class FileServer():
 		self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		print addr, port
 		self.sock.bind((addr, port))
-		self.sock.listen(5)
+		self.sock.listen(20)
 
 	def main(self, setNumberOfStartedSegmets):
 		'''

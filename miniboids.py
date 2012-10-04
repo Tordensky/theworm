@@ -183,8 +183,8 @@ class Boid(Vector2D):
 		
 	# Draw tail
 	def draw_vec_from_self(self, screen):
-	tail = self.speed.normalized()
-	pygame.draw.line(screen, self.color, (self.pos.x, self.pos.y), (self.pos.x - tail.x * self.tail_length, self.pos.y - tail.y * self.tail_length), self.tail_stroke)
+		tail = self.speed.normalized()
+		pygame.draw.line(screen, self.color, (self.pos.x, self.pos.y), (self.pos.x - tail.x * self.tail_length, self.pos.y - tail.y * self.tail_length), self.tail_stroke)
 	
 	# Draw self
 	def draw(self, screen):

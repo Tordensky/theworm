@@ -26,10 +26,10 @@ def quitPython():
 class WormSegment():
 	def __init__(self):
 		"""
-		The code for the worm segment
+		The code for the worm segment 10,50
 		"""
-		self.sendHeartBeatIntervall = 10
-		self.estimateHartBeatIntervall = 100
+		self.sendHeartBeatIntervall = 5
+		self.estimateHartBeatIntervall = 25
 		self.heartbeatreciver = 0.0
 		self.udpComm = UDPcomm(MCAST_PORT)
 		self.numberOfSegments = 0
