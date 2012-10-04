@@ -1,8 +1,4 @@
-'''
-Created on Sep 26, 2012
-
-@author: Simon Nistad
-'''
+# -*- coding: utf-8 -*-
 import pygame, os, random
 from config import *
 from miniboids import *

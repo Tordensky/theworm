@@ -39,6 +39,8 @@ class CellGate():
         SCREEN_COLOR = (random.randrange(0,255), random.randrange(0,255), random.randrange(0,255))
         color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
         myFont = pygame.font.SysFont("None", 100)
+        
+        clock = pygame.time.Clock()
         while(True):
                 for event in pygame.event.get():
                         if event.type == pygame.QUIT:

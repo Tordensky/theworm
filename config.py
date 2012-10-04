@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 MCAST_GRP = '224.1.1.1'
 MCAST_PORT = 30667
 
