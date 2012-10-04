@@ -9,6 +9,9 @@ class UDPcomm():
     found some implementation http://stackoverflow.com/questions/603852/multicast-in-python
     '''
     def __init__(self, PORT):
+    	'''
+    	constructor
+    	'''
 		self.reciveSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 		self.reciveSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.reciveSock.bind(('', MCAST_PORT))
@@ -20,9 +23,15 @@ class UDPcomm():
 		self.port = PORT
 		
     def send(self, data):
+    	'''
+    	sends data at the given mulicast addr/port
+    	'''
 		self.sendSock.sendto(str(data), (MCAST_GRP, self.port))
   
     def listen(self, length, die, increaseFunction):
+    	'''
+    	listen for incoming datagrams
+    	'''
 		try:
 			while True:
 				received = self.reciveSock.recv(length)

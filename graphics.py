@@ -5,10 +5,16 @@ from miniboids import *
 
 class Graphics(object):
     def __init__(self, dieFunction, number_of_segments):
+    	'''
+    	constructor
+    	'''
         self.dieFunction = dieFunction
         self.num_segs = number_of_segments
         
     def run(self):
+    	'''
+    	starts the simple boids simulation
+    	'''
         
         pygame.init()
         x = random.randint(0, 1024 - SCREEN_WIDTH)
