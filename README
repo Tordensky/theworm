@@ -1,0 +1,28 @@
+This project is meant to run at a cluster and to do this with the cf (cluster fork) command
+you will in most cases need the absolute paht to run the different files, but for some cf should never be used
+
+cellsgate.py contains the code for starting the worm gate, making it posible for the worm segmetns to actually run
+on the different nodes in the cluster or just one node
+
+to run it type:
+python cellsgate.py
+
+to run it on the cluster type:
+cf python path/to/file/cellsgate.py
+
+With the wormgate up and running it's time to start a worm segment, this is done by running the test code for one of the python
+files that act as a file transfer to a random node. For this to work you MUST have a zip file named theworm.zip with all the python files in this 
+project inside. These files are:
+	-- cells.py (worm segment file, the one going to run on all the different nodes)
+	-- deamonize.py (code for deamonizing a python process)
+	-- config.py (some values used by different python files)
+	-- graphics.py (runs the pygame graphics of the project)
+	-- miniboid.py (contains the boids algorithm)
+	-- udp.py (contains udp code for communication between worm segments)
+	-- communication.py (contains code for sending and reciving files)
+You can find such a zip file allready in this folder, so this can simply be used
+
+from here simply run: 
+python communication.py <random paramenter to start the file transfer> 
+in the same folder the zip file is in to send the worm segment to a random node
+DO NOTE that this command is not meant to be used together with the cluster fork command, but can if you want to
