@@ -129,7 +129,7 @@ class WormSegment():
 
 if __name__ == "__main__":
 	
-	deamonize.daemonize('dev/null', 'output', 'error')
+	#deamonize.daemonize('dev/null', 'output', 'error')
 	os.putenv('DISPLAY', ':0') # Attach to local display
 
 	worm = WormSegment()
