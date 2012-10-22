@@ -28,8 +28,8 @@ class WormSegment():
 		"""
 		The code for the worm segment 10,50
 		"""
-		self.sendHeartBeatIntervall = 5
-		self.estimateHartBeatIntervall = 25
+		self.sendHeartBeatIntervall = 100
+		self.estimateHartBeatIntervall = 500
 		self.heartbeatreciver = 0.0
 		self.udpComm = UDPcomm(MCAST_PORT)
 		self.numberOfSegments = 0
@@ -75,7 +75,8 @@ class WormSegment():
 		print "number of estimated segments" , self.numberOfSegments
 		
 		if self.numberOfSegments > MAX_WORM_SEGS:
-			self.shouldIKillMyself(self.numberOfSegments)
+			#self.shouldIKillMyself(self.numberOfSegments)
+			pass
 		elif self.numberOfSegments < MIN_WORM_SEGS:
 			self.shouldIPropagate(self.numberOfSegments)
 
