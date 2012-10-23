@@ -12,38 +12,59 @@ class UDPcomm():
 		'''
 		constructor
 		'''
-		self.reciveSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-		self.reciveSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		self.reciveSock.bind(('', MCAST_PORT))
+		self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+		self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		self.socket.bind(('', PORT))
 		mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
-		self.reciveSock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+		self.socket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 	
-		self.sendSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-		self.sendSock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
+		self.multicastSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+		self.multicastSock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
 		self.port = PORT
-		
-	def send(self, data):
+
+	def send(self, data, addr, port):
+		'''
+		sends data at the given addr/port
+		'''
+		self.socket.sendto(str(data), (addr, port))
+
+	def multicast(self,data):
 		'''
 		sends data at the given mulicast addr/port
 		'''
-		self.sendSock.sendto(str(data), (MCAST_GRP, self.port))
+		self.multicastSock.sendto(str(data), (MCAST_GRP, self.port))
 
-	def listen(self, length, die, increaseFunction):
+	def listen(self, length, callback):
 		'''
 		listen for incoming datagrams
 		'''
 		try:
 			while True:
-				received = self.reciveSock.recv(length)
+				received = self.socket.recv(length)
+				callback(received)
 
-				if received == 'die':
-					die()
-				else:
-					increaseFunction(float(received))
-					#print result
-				
-						
 		except Exception as e:
 				print "some kind of weird upd error"
 				print e.args
-		
+
+
+
+#testing the udp
+if __name__ == "__main__":
+	def callback(recived):
+		print recived
+	import thread
+	udp = UDPcomm(0)
+	thread.start_new_thread(udp.listen,(10, callback))
+
+	udpMUL = UDPcomm(MCAST_PORT_MUTEX)
+	thread.start_new_thread(udpMUL.listen,(10, callback))
+	
+	udp.send("mordi", udp.socket.getsockname()[0], udp.socket.getsockname()[1])
+	udpMUL.multicast("fardi")
+	udp.send("mordi2", udp.socket.getsockname()[0], udp.socket.getsockname()[1])
+	
+	
+	while(1):
+		pass
+	#udp.listen()

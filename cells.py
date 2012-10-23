@@ -59,7 +59,7 @@ class WormSegment():
 		Multicasts a heartbeat to all the rest of the worms
 		"""
 		while RUNNING:
-			self.udpComm.send(self.sendHeartBeatIntervall)
+			self.udpComm.multicast(self.sendHeartBeatIntervall)
 			time.sleep(self.sendHeartBeatIntervall / 1000.0)
 		
 	
@@ -106,13 +106,21 @@ class WormSegment():
 		"""
 		Listen for all the heartbeats from the rest of the worm segments
 		"""
-		thread.start_new_thread(self.udpComm.listen,(10, self.killMySelf, self.updateHeartBeatCount))
+		thread.start_new_thread(self.udpComm.listen,(10, self.callback))
 	
 	def get_num_segments(self):
 		'''
 		returns the latest measurement of number of segments alive
 		'''
 		return self.numberOfSegments
+		
+		
+	def callback(self, received):
+		if received == 'die':
+			self.killMySelf()
+		else:
+			self.updateHeartBeatCount(float(received))
+		
 		
 	def killMySelf(self):
 		"""
@@ -129,7 +137,7 @@ class WormSegment():
 
 if __name__ == "__main__":
 	
-	#deamonize.daemonize('dev/null', 'output', 'error')
+	deamonize.daemonize('dev/null', 'output', 'error')
 	os.putenv('DISPLAY', ':0') # Attach to local display
 
 	worm = WormSegment()
