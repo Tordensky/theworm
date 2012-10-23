@@ -3,7 +3,8 @@
 class LamportClock():
 	def __init__(self, addr, port):
 		assert(port > 0)
-		assert(len(addr.split('.')) == 4)
+		print addr
+		assert(len(str(addr).split('.')) == 4)
 		self.lamportClock = 0.0
 		self._setUniqueId(addr, port)
 		
@@ -15,11 +16,10 @@ class LamportClock():
 		self.lamportClock += self.uniqeId
 		
 	def synchClocks(self, clock):
-		if self.isClockGreater(clock):
+		if self.isClockGreater(float(clock)):
 			self.lamportClock = int(float(clock)) + 1.0 + self.uniqeId
 
 	def isClockGreater(self, clock):
-		assert(clock != self.lamportClock)
 		if clock > self.lamportClock:
 			return True
 		return False
@@ -32,7 +32,7 @@ class LamportClock():
 
 if __name__ == "__main__":
 	lp = LamportClock('127.0.0.12', 30667)
-	lp.synchClocks('134.3')
+	lp.synchClocks('0.1547882')
 	print lp.lamportClock
 	lp.increase()
 	print lp.lamportClock

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import pygame, os, random
 from config import *
+import thread
 from miniboids import *
+from mutex import *
 
 class Graphics(object):
 	def __init__(self, dieFunction, number_of_segments):
@@ -11,6 +13,7 @@ class Graphics(object):
 		self.dieFunction = dieFunction
 		self.num_segs = number_of_segments
 		self.active = False
+		self.mutex = Mutex()
 	
 	def setActive(self):
 		self.active = True
@@ -39,19 +42,26 @@ class Graphics(object):
 		SCREEN_COLOR = (random.randrange(0,255), random.randrange(0,255), random.randrange(0,255))
 		
 		myFont = pygame.font.SysFont("None", 300)
-		color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+		smallfont = pygame.font.SysFont("None", 30)
+		color = ((SCREEN_COLOR[0] + 123)%255 , (SCREEN_COLOR[1] + 123) % 255 , (SCREEN_COLOR[2] + 123)%255 )
+		
+		thread.start_new_thread(self.mutex.run,(self.num_segs,))
 		
 		while(RUNNING):
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.dieFunction()
+					os._exit(0)
 			
 			pygame.draw.rect(self.screen, (SCREEN_COLOR), (0, 0, self.screen.get_width(), self.screen.get_height()))
 			time_passed = clock.tick(30) # limit to x FPS 
 			time_passed_seconds = time_passed / 1000.0
 
+			
 			if self.active:
 				self.screen.blit(myFont.render(str(int(self.num_segs())), 0, (color)), (10,10))
+			
+				self.screen.blit(smallfont.render(str(self.mutex.getlamportClock()), 0, (color)), (200,10))
 			
 			# Update boids
 			for boid in boids:
@@ -66,7 +76,7 @@ class Graphics(object):
 				self.screen.blit(s, (0,0))
 			#pygame.draw.rect(self.screen, (0,0,0, 150), (0, 0, self.screen.get_width(), self.screen.get_height()))
 				self.screen.blit(myFont.render(str(int(self.num_segs())), 0, (color)), (10,10))
-			
+				self.screen.blit(smallfont.render(str(self.mutex.getlamportClock()), 0, (color)), (200,10))
 			pygame.display.update()
 
 

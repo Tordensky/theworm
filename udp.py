@@ -2,6 +2,10 @@
 import socket
 import struct
 from config import *
+import socket
+
+
+
 
 class UDPcomm():
 	'''
@@ -20,8 +24,17 @@ class UDPcomm():
 	
 		self.multicastSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 		self.multicastSock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-		self.port = PORT
-
+		self.port = self.socket.getsockname()[1]
+	
+	@staticmethod
+	def getMachineIp():
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		s.connect(('rocksvv.cs.uit.no', 0))
+		return s.getsockname()[0]
+		
+	def getPort(self):
+		return self.port
+		
 	def send(self, data, addr, port):
 		'''
 		sends data at the given addr/port
@@ -42,9 +55,10 @@ class UDPcomm():
 			while True:
 				received = self.socket.recv(length)
 				callback(received)
+				
 
 		except Exception as e:
-				print "some kind of weird upd error"
+				print "some kind of wierd upd error"
 				print e.args
 
 
@@ -55,14 +69,14 @@ if __name__ == "__main__":
 		print recived
 	import thread
 	udp = UDPcomm(0)
-	thread.start_new_thread(udp.listen,(10, callback))
-
-	udpMUL = UDPcomm(MCAST_PORT_MUTEX)
-	thread.start_new_thread(udpMUL.listen,(10, callback))
+	#thread.start_new_thread(udp.listen,(10, callback))
+	print udp.getMachineIp()
+	#udpMUL = UDPcomm(MCAST_PORT_MUTEX)
+	#thread.start_new_thread(udpMUL.listen,(10, callback))
 	
-	udp.send("mordi", udp.socket.getsockname()[0], udp.socket.getsockname()[1])
-	udpMUL.multicast("fardi")
-	udp.send("mordi2", udp.socket.getsockname()[0], udp.socket.getsockname()[1])
+	#udp.send("mordi", udp.socket.getsockname()[0], udp.socket.getsockname()[1])
+	#udpMUL.multicast("fardi")
+	#udp.send("mordi2", udp.socket.getsockname()[0], udp.socket.getsockname()[1])
 	
 	
 	while(1):
