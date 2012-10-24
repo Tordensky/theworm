@@ -12,14 +12,8 @@ class Graphics(object):
 		'''
 		self.dieFunction = dieFunction
 		self.num_segs = number_of_segments
-		self.active = False
 		self.mutex = Mutex()
-	
-	def setActive(self):
-		self.active = True
-	def setInActive(self):
-		self.active = False
-	
+
 	def run(self):
 		'''
 		starts the simple boids simulation
@@ -58,25 +52,27 @@ class Graphics(object):
 			time_passed_seconds = time_passed / 1000.0
 
 			
-			if self.active:
+			if self.mutex.hasLock:
 				self.screen.blit(myFont.render(str(int(self.num_segs())), 0, (color)), (10,10))
 			
 				self.screen.blit(smallfont.render(str(self.mutex.getlamportClock()), 0, (color)), (200,10))
+				self.screen.blit(smallfont.render(str(self.mutex.hasLock), 0, (color)), (200,40))
 			
 			# Update boids
 			for boid in boids:
-				if self.active:
+				if self.mutex.hasLock:
 					boid.update_vectors(boids,[], [])
 					boid.move(time_passed_seconds, self.screen)
 					
 				boid.draw(self.screen)
 					
-			if not self.active:
+			if not self.mutex.hasLock:
 				s.fill((0,0,0,175))                         # notice the alpha value in the color
 				self.screen.blit(s, (0,0))
 			#pygame.draw.rect(self.screen, (0,0,0, 150), (0, 0, self.screen.get_width(), self.screen.get_height()))
 				self.screen.blit(myFont.render(str(int(self.num_segs())), 0, (color)), (10,10))
 				self.screen.blit(smallfont.render(str(self.mutex.getlamportClock()), 0, (color)), (200,10))
+				self.screen.blit(smallfont.render(str(self.mutex.hasLock), 0, (color)), (200,40))
 			pygame.display.update()
 
 

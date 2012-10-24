@@ -53,8 +53,8 @@ class UDPcomm():
 		'''
 		try:
 			while True:
-				received = self.socket.recv(length)
-				callback(received)
+				received, addr = self.socket.recvfrom(length)
+				callback(received, addr)
 				
 
 		except Exception as e:

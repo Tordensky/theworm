@@ -78,7 +78,8 @@ class WormSegment():
 			#self.shouldIKillMyself(self.numberOfSegments)
 			pass
 		elif self.numberOfSegments < MIN_WORM_SEGS:
-			self.shouldIPropagate(self.numberOfSegments)
+			#self.shouldIPropagate(self.numberOfSegments)
+			pass
 
 	def shouldIKillMyself(self, numberOfSegmentsAlive):
 		'''
@@ -115,7 +116,7 @@ class WormSegment():
 		return self.numberOfSegments
 		
 		
-	def callback(self, received):
+	def callback(self, received, addr):
 		if received == 'die':
 			self.killMySelf()
 		else:
@@ -137,7 +138,7 @@ class WormSegment():
 
 if __name__ == "__main__":
 	
-	deamonize.daemonize('dev/null', 'output', 'error')
+	#deamonize.daemonize('dev/null', 'output', 'error')
 	os.putenv('DISPLAY', ':0') # Attach to local display
 
 	worm = WormSegment()

@@ -17,7 +17,8 @@ class LamportClock():
 		
 	def synchClocks(self, clock):
 		if self.isClockGreater(float(clock)):
-			self.lamportClock = int(float(clock)) + 1.0 + self.uniqeId
+			self.lamportClock = int(float(clock)) + self.uniqeId
+		self.increase()
 
 	def isClockGreater(self, clock):
 		if clock > self.lamportClock:
