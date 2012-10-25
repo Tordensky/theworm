@@ -26,3 +26,7 @@ from here simply run:
 python communication.py <random paramenter to start the file transfer> 
 in the same folder the zip file is in to send the worm segment to a random node
 DO NOTE that this command is not meant to be used together with the cluster fork command, but can if you want to
+
+To kill all the worm segments simply ssh into one machine in the rocksvv cluster and run the kill.py script by typing
+python kill.py
+NOTE: this will not kill the worm gates
