@@ -29,7 +29,7 @@ class Mutex():
 
 	def run(self, getEstimatedSegmentsFunction):
 		while(True):
-			time.sleep(5) # Random
+			time.sleep(1) # Random
 			print "Trying to lock"
 			self.lock(getEstimatedSegmentsFunction)
 			print "Sleeping a little"
@@ -69,8 +69,8 @@ class Mutex():
 		
 		self.multicast.multicast(json.dumps(message))
 		
-		#wormSegments = getEstimatedSegmentsFunction()
-		
+		wormSegments = getEstimatedSegmentsFunction()
+		print "number of segments is : " + str(wormSegments)
 		self.lamport.increase() #MAY CREATE A DEADLOCK HERE
 		
 		try:
@@ -84,8 +84,7 @@ class Mutex():
 					self.askForLockOkCounter += 1
 					print "got an ok"  +  str(updates["TimeStamp"])
 			
-				#What if the number has now changed ? -- should take it into account
-				if self.askForLockOkCounter == 5:
+				if self.askForLockOkCounter == wormSegments:
 					print "Got an ok from all"
 					break
 					

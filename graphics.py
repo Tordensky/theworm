@@ -2,6 +2,7 @@
 import pygame, os, random
 from config import *
 import thread
+import time
 from miniboids import *
 from mutex import *
 
@@ -39,6 +40,8 @@ class Graphics(object):
 		smallfont = pygame.font.SysFont("None", 30)
 		color = ((SCREEN_COLOR[0] + 123)%255 , (SCREEN_COLOR[1] + 123) % 255 , (SCREEN_COLOR[2] + 123)%255 )
 		
+		#waiting for the number of segments to stabilize them selves
+		time.sleep(10)
 		thread.start_new_thread(self.mutex.run,(self.num_segs,))
 		
 		while(RUNNING):
